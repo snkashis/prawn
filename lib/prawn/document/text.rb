@@ -29,6 +29,11 @@ module Prawn
       # text will be kerned by default.  You can disable this feature by passing
       # <tt>:kerning => false</tt>.
       #
+      # == Rotation
+      #
+      # Text can be rotated before it is placed on the canvas by specifying the
+      # :rotate option. Rotation occurs counter-clockwise.
+      #
       # == Encoding
       #
       # Note that strings passed to this function should be encoded as UTF-8.
@@ -118,23 +123,24 @@ module Prawn
           end 
         end
       end  
-      
+
       def add_text_content(text, x, y, options)
         text = font.metrics.convert_text(text,options)
 
-        add_content %Q{
-          BT
-          /#{font.identifier} #{font.size} Tf
-          #{x} #{y} Td
-        }  
-
+        add_content "\nBT"
+        add_content "/#{font.identifier} #{font.size} Tf"
+        if options[:rotate]
+          rad = options[:rotate].to_i * Math::PI / 180
+          arr = [ Math.cos(rad), Math.sin(rad), -Math.sin(rad), Math.cos(rad), x, y ]
+          add_content "%.3f %.3f %.3f %.3f %.3f %.3f Tm" % arr
+        else
+          add_content "#{x} #{y} Td"
+        end
+        rad = 1.570796
         add_content Prawn::PdfObject(text, true) <<
-          " #{options[:kerning] ? 'TJ' : 'Tj'}\n"
-
-        add_content %Q{
-          ET
-        }
-      end  
+          " #{options[:kerning] ? 'TJ' : 'Tj'}"
+        add_content "ET\n"
+      end
     end
   end
 end
