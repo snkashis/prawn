@@ -231,19 +231,19 @@ module Prawn
                                                       :Ordering   => "Identity",
                                                       :Supplement => 0 },
                                  :FontDescriptor => descriptor,
-                                 :W              => @metrics.glyph_widths,
-                                 :CIDToGIDMap    => :Identity ) 
+                                 :W              => @metrics.glyph_widths)
 
       # TTF anf OTF files are more or less the same container format, with
       # slightly different content. They are embedded the same way - the
       # following few lines are the only differences.
       if otf
-        fontfile.data[:Subtype] = :CIDFontType0C
+        fontfile.data[:Subtype]     = :CIDFontType0C
         descriptor.data[:FontFile3] = fontfile
-        descendant.data[:Subtype] = :CIDFontType0
+        descendant.data[:Subtype]   = :CIDFontType0
       else
-        descriptor.data[:FontFile2] = fontfile
-        descendant.data[:Subtype] = :CIDFontType2
+        descriptor.data[:FontFile2]   = fontfile
+        descendant.data[:Subtype]     = :CIDFontType2
+        descendant.data[:CIDToGIDMap] = :Identity
       end
 
 
