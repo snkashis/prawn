@@ -89,7 +89,9 @@ module Prawn
       
       case(name)
       when /\.ttf$/
-        embed_ttf(name)
+        embed_ttf(name, false)
+      when /\.otf$/
+        embed_ttf(name, true)
       else
         register_builtin(name)
       end  
@@ -188,7 +190,7 @@ module Prawn
                                   :Encoding => :WinAnsiEncoding)                                                   
     end    
     
-    def embed_ttf(file)
+    def embed_ttf(file, otf = false)
       unless File.file?(file)
         raise ArgumentError, "file #{file} does not exist"
       end
@@ -209,6 +211,7 @@ module Prawn
       fontfile = @document.ref(:Length => compressed_font.size,
                                :Length1 => font_content.size,
                                :Filter => :FlateDecode )
+      fontfile.data[:Subtype] = :OpenType if otf
       fontfile << compressed_font
 
       # TODO: Not sure what to do about CapHeight, as ttf2afm doesn't
@@ -216,13 +219,17 @@ module Prawn
       #
       descriptor = @document.ref(:Type        => :FontDescriptor,
                                  :FontName    => basename,
-                                 :FontFile2   => fontfile,
                                  :FontBBox    => @metrics.bbox,
                                  :Flags       => 32, # FIXME: additional flags
                                  :StemV       => 0,
                                  :ItalicAngle => 0,
                                  :Ascent      => @metrics.ascender,
                                  :Descent     => @metrics.descender )    
+      if otf
+        descriptor.data[:FontFile3] = fontfile
+      else
+        descriptor.data[:FontFile2] = fontfile
+      end
 
       descendant = @document.ref(:Type           => :Font,
                                  :Subtype        => :CIDFontType2, # CID, TTF

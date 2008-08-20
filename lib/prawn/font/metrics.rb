@@ -19,6 +19,8 @@ module Prawn
         data[font] ||= case(font)
           when /\.ttf$/
             TTF.new(font)
+          when /\.otf$/
+            TTF.new(font)
           else
             Adobe.new(font)
         end
