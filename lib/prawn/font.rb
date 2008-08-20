@@ -211,7 +211,6 @@ module Prawn
       fontfile = @document.ref(:Length => compressed_font.size,
                                :Length1 => font_content.size,
                                :Filter => :FlateDecode )
-      fontfile.data[:Subtype] = :OpenType if otf
       fontfile << compressed_font
 
       # TODO: Not sure what to do about CapHeight, as ttf2afm doesn't
@@ -225,14 +224,8 @@ module Prawn
                                  :ItalicAngle => 0,
                                  :Ascent      => @metrics.ascender,
                                  :Descent     => @metrics.descender )    
-      if otf
-        descriptor.data[:FontFile3] = fontfile
-      else
-        descriptor.data[:FontFile2] = fontfile
-      end
 
       descendant = @document.ref(:Type           => :Font,
-                                 :Subtype        => :CIDFontType2, # CID, TTF
                                  :BaseFont       => basename,
                                  :CIDSystemInfo  => { :Registry   => "Adobe",
                                                       :Ordering   => "Identity",
@@ -240,6 +233,19 @@ module Prawn
                                  :FontDescriptor => descriptor,
                                  :W              => @metrics.glyph_widths,
                                  :CIDToGIDMap    => :Identity ) 
+
+      # TTF anf OTF files are more or less the same container format, with
+      # slightly different content. They are embedded the same way - the
+      # following few lines are the only differences.
+      if otf
+        fontfile.data[:Subtype] = :CIDFontType0C
+        descriptor.data[:FontFile3] = fontfile
+        descendant.data[:Subtype] = :CIDFontType0
+      else
+        descriptor.data[:FontFile2] = fontfile
+        descendant.data[:Subtype] = :CIDFontType2
+      end
+
 
       to_unicode_content = @metrics.to_unicode_cmap.to_s
       compressed_to_unicode = Zlib::Deflate.deflate(to_unicode_content)   
