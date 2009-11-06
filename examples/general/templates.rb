@@ -6,7 +6,9 @@
 require "#{File.dirname(__FILE__)}/../example_helper.rb"
 
 filename = "#{Prawn::BASEDIR}/reference_pdfs/curves.pdf"
+filename = "#{Prawn::BASEDIR}/reference_pdfs/fancy_table.pdf"
 
 Prawn::Document.generate("template.pdf", :template => filename) do
-  text "Curves!", :size => 18, :align => :center
+  text "Previous pages and content imported", :size => 18, :align => :center
+  text "This page and content is brand new", :size => 18, :align => :center
 end
