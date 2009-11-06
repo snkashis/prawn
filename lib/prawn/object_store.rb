@@ -5,35 +5,51 @@
 # Copyright August 2009, Brad Ediger.  All Rights Reserved.
 #
 # This is free software. Please see the LICENSE and COPYING files for details.
+
+require 'pdf/reader'
+
 module Prawn
   class ObjectStore #:nodoc:
     include Enumerable
     BASE_OBJECTS = %w[info pages root]
 
-    def initialize(info={})
+    attr_reader :info, :root
+
+    def initialize(info = {})
       @objects = {}
       @identifiers = []
-      
+
       # Create required PDF roots
-      @info    = ref(info).identifier
-      @pages   = ref(:Type => :Pages, :Count => 0, :Kids => []).identifier
-      @root    = root_ref(info[:outlines]).identifier
+      if info[:template]
+        load_file(info[:template])
+      else
+        @info     = ref(info).identifier
+        pages_obj = ref(:Type => :Pages, :Count => 0, :Kids => [])
+        @pages    = pages_obj.identifier
+        @root     = root_ref(pages_obj, info[:outlines]).identifier
+      end
     end
-    
-    def root_ref(outlines = nil)
+
+    def root_ref(pages, outlines = nil)
       root_hash = {:Type => :Catalog, :Pages => pages }
-      root_hash.merge(:Outlines => "")if outlines
+      root_hash.merge(:Outlines => "") if outlines
       ref(root_hash)
     end
 
     def ref(data, &block)
       push(size + 1, data, &block)
-    end                                               
+    end
 
-    %w[info pages root].each do |name|
-      define_method(name) do
-        @objects[instance_variable_get("@#{name}")]
-      end
+    def info
+      @objects[@info]
+    end
+
+    def root
+      @objects[@root]
+    end
+
+    def pages
+      root.data[:Pages]
     end
 
     # Adds the given reference to the store and returns the reference object.
@@ -92,6 +108,67 @@ module Prawn
 
         @objects = new_objects
         @identifiers = new_identifiers
+      end
+    end
+
+    private
+
+    def load_file(filename)
+      unless File.file?(filename)
+        raise ArgumentError, "#{filename} does not exist"
+      end
+
+      unless PDF.const_defined?("Hash")
+        raise "PDF::Hash not found. Is PDF::Reader > 0.8?"
+      end
+
+      hash = PDF::Hash.new(filename)
+      src_info = hash.trailer[:Info]
+      src_root = hash.trailer[:Root]
+
+      if src_info
+        @info = load_object_graph(hash, src_info).identifier
+      else
+        @info = ref({}).identifier
+      end
+
+      if src_root
+        @root = load_object_graph(hash, src_root).identifier
+      else
+        @pages   = ref(:Type => :Pages, :Count => 0, :Kids => [])
+        @root    = ref(:Type => :Catalog, :Pages => @pages).identifier
+      end
+    end
+
+    def load_object_graph(hash, object)
+      @loaded_objects ||= {}
+      @stream_data ||= {}
+      case object
+      when Hash then
+        object.each { |key,value| object[key] = load_object_graph(hash, value) }
+        object
+      when Array then
+        object.map { |item| load_object_graph(hash, item)}
+      when PDF::Reader::Stream then
+        stream_dict = load_object_graph(hash, object.hash)
+        new_obj = ref(stream_dict)
+        new_obj << object.data
+        new_obj
+      when PDF::Reader::Reference then
+        unless @loaded_objects.has_key?(object.id)
+          @loaded_objects[object.id] = ref(nil)
+          new_obj = load_object_graph(hash, hash[object.id])
+          if new_obj.kind_of?(Prawn::Reference)
+            @loaded_objects[object.id] = new_obj
+          else
+            @loaded_objects[object.id].data = new_obj
+          end
+        end
+        @loaded_objects[object.id]
+      when String
+        Prawn::LiteralString.new(object)
+      else
+        object
       end
     end
 
