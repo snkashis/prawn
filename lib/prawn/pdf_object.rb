@@ -74,7 +74,7 @@ module Prawn
       PdfObject(obj.name) + " " + PdfObject(obj.value)
     else
       raise Prawn::Errors::FailedObjectConversion, 
-        "This object cannot be serialized to PDF"
+        "This object cannot be serialized to PDF (#{obj.inspect})"
     end     
   end   
   
