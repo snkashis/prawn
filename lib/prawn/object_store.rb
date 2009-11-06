@@ -22,7 +22,7 @@ module Prawn
       if opts[:template]
         load_file(opts[:template])
       else
-        @info    = ref(opts[:info] | {}).identifier
+        @info    = ref(opts[:info] || {}).identifier
         @pages   = ref(:Type => :Pages, :Count => 0, :Kids => [])
         @root    = ref(:Type => :Catalog, :Pages => @pages).identifier
       end
@@ -33,7 +33,7 @@ module Prawn
     end
 
     def info
-      @objects[@root]
+      @objects[@info]
     end
 
     def root
