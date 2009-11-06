@@ -116,6 +116,7 @@ module Prawn
     # <tt>:background</tt>:: An image path to be used as background on all pages [nil]
     # <tt>:info</tt>:: Generic hash allowing for custom metadata properties [nil]
     # <tt>:text_options</tt>:: A set of default options to be handed to text(). Be careful with this.
+    # <tt>:template</tt>:: The path to an existing PDF file to use as a template [nil] 
     #
     # Setting e.g. the :margin to 100 points and the :left_margin to 50 will result in margins
     # of 100 points on every side except for the left, where it will be 50.
@@ -149,7 +150,8 @@ module Prawn
     def initialize(options={},&block)   
        Prawn.verify_options [:page_size, :page_layout, :margin, :left_margin, 
          :right_margin, :top_margin, :bottom_margin, :skip_page_creation, 
-         :compress, :skip_encoding, :text_options, :background, :info], options
+         :compress, :skip_encoding, :text_options, :background, :info,
+         :template], options
       
        options[:info] ||= {}
        options[:info][:Creator] ||= "Prawn"
@@ -162,7 +164,11 @@ module Prawn
        end
           
        @version = 1.3
-       @store = ObjectStore.new(options[:info])
+       if options[:template]
+         @store = ObjectStore.new(:template => options[:template])
+       else
+         @store = ObjectStore.new(:info => options[:info])
+       end
        @trailer = {}
 
        @page_size     = options[:page_size]   || "LETTER"
