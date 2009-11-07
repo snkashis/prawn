@@ -118,7 +118,7 @@ module Prawn
           if new_obj.kind_of?(PDF::Reader::Stream)
             stream_dict = load_object_graph(hash, new_obj.hash)
             @loaded_objects[object.id].data = stream_dict
-            @loaded_objects[object.id] << new_obj.to_s
+            @loaded_objects[object.id] << new_obj.data
           else
             @loaded_objects[object.id].data = new_obj
           end
