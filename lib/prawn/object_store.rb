@@ -124,6 +124,10 @@ module Prawn
           end
         end
         @loaded_objects[object.id]
+      when PDF::Reader::Stream
+        # Stream is a subclass of string, so this is here to prevent the stream
+        # being wrapped in a LiteralString
+        object
       when String
         Prawn::LiteralString.new(object)
       else
