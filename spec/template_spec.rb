@@ -8,7 +8,7 @@ describe "Document built from a template" do
     @pdf = Prawn::Document.new(:template => filename)
 
     page_counter = PDF::Inspector::Page.analyze(@pdf.render)
-    @pdf.page_count.should == 1
+    page_counter.pages.size.should == 1
   end
 
   it "should not add an extra restore_graphics_state operator to the end of any content stream" do
@@ -37,8 +37,17 @@ describe "Document built from a template" do
     hash.values.select { |obj|
       obj.kind_of?(PDF::Reader::Stream)
     }.size.should == 2
-
   end
 
+  it "should allow text to be added to a single page template" do
+    filename = "#{Prawn::BASEDIR}/data/pdfs/hexagon.pdf"
+
+    @pdf = Prawn::Document.new(:template => filename)
+
+    @pdf.text "Adding some text"
+
+    text = PDF::Inspector::Text.analyze(@pdf.render)
+    text.strings.first.should == "Adding some text"
+  end
 
 end

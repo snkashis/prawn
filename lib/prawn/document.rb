@@ -191,10 +191,6 @@ module Prawn
                     :top    => options[:top_margin]    || default_margin,
                     :bottom => options[:bottom_margin] || default_margin  }
 
-       generate_margin_box
-
-       @bounding_box = @margin_box
-
        start_new_page unless options[:skip_page_creation] || options[:template]
 
        go_to_page(:first, :finish_stream => false) if options[:template]
@@ -228,6 +224,10 @@ module Prawn
 
        finish_page_content if @page_content
        build_new_page_content
+
+       generate_margin_box
+
+       @bounding_box = @margin_box
 
        @store.pages.data[:Kids] << current_page
        @store.pages.data[:Count] += 1
@@ -482,6 +482,12 @@ module Prawn
 
       @current_page = @store.object_id_for_page(k)
       @page_content = new_content_stream(options)
+
+      generate_margin_box
+
+      @bounding_box = @margin_box
+
+      @y = @bounding_box.absolute_top
     end
 
     # Returns true if content streams will be compressed before rendering,
@@ -496,24 +502,25 @@ module Prawn
     # See Prawn::Document::Internals for low-level PDF functions
 
     def build_new_page_content
-      generate_margin_box
       @page_content = ref(:Length => 0)
 
       @current_page = ref(:Type      => :Page,
                           :Parent    => @store.pages,
                           :MediaBox  => page_dimensions,
                           :Contents  => page_content)
+      generate_margin_box
       update_colors
       undash if dashed?
     end
 
     def generate_margin_box
       old_margin_box = @margin_box
+      mediabox = current_page_media_box
       @margin_box = BoundingBox.new(
         self,
-        [ @margins[:left], page_dimensions[-1] - @margins[:top] ] ,
-        :width => page_dimensions[-2] - (@margins[:left] + @margins[:right]),
-        :height => page_dimensions[-1] - (@margins[:top] + @margins[:bottom])
+        [ @margins[:left], mediabox[-1] - @margins[:top] ] ,
+        :width => mediabox[-2] - (@margins[:left] + @margins[:right]),
+        :height => mediabox[-1] - (@margins[:top] + @margins[:bottom])
       )
 
       # we must update bounding box if not flowing from the previous page
