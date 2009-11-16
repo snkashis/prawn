@@ -6,8 +6,11 @@
 require "#{File.dirname(__FILE__)}/../example_helper.rb"
 
 filename = "#{Prawn::BASEDIR}/data/pdfs/hexagon.pdf"
-#filename = "#{Prawn::BASEDIR}/reference_pdfs/curves.pdf"
-#filename = "#{Prawn::BASEDIR}/reference_pdfs/fancy_table.pdf"
 
 pdf = Prawn::Document.new(:template => filename)
+
+pdf.fill_color "00ff00"
+pdf.fill_polygon [200, 350], [300, 400], [400, 350],
+                 [400, 250], [300, 200], [200, 250]            
+
 pdf.render_file "template.pdf"

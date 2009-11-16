@@ -197,7 +197,7 @@ module Prawn
 
        start_new_page unless options[:skip_page_creation] || options[:template]
 
-       go_to_page(:first) if options[:template]
+       go_to_page(:first, :finish_stream => false) if options[:template]
 
        if block
          block.arity < 1 ? instance_eval(&block) : block[self]
@@ -476,9 +476,12 @@ module Prawn
       end
     end
 
-    def go_to_page(k) # :nodoc:
+    def go_to_page(k, options = {}) # :nodoc:
+      Prawn.verify_options [:finish_stream], options
+      options[:finish_stream]= true if options[:finish_stream].nil?
+
       @current_page = @store.object_id_for_page(k)
-      @page_content = @store[@current_page].data[:Contents].identifier
+      @page_content = new_content_stream(options)
     end
 
     # Returns true if content streams will be compressed before rendering,
