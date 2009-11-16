@@ -195,7 +195,9 @@ module Prawn
 
        @bounding_box = @margin_box
 
-       start_new_page unless options[:skip_page_creation]
+       start_new_page unless options[:skip_page_creation] || options[:template]
+
+       go_to_page(:first) if options[:template]
 
        if block
          block.arity < 1 ? instance_eval(&block) : block[self]
@@ -475,9 +477,8 @@ module Prawn
     end
 
     def go_to_page(k) # :nodoc:
-      jump_to = @store.pages.data[:Kids][k]
-      @current_page = jump_to.identifier
-      @page_content = jump_to.data[:Contents].identifier
+      @current_page = @store.object_id_for_page(k)
+      @page_content = @store[@current_page].data[:Contents].identifier
     end
 
     # Returns true if content streams will be compressed before rendering,
