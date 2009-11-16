@@ -233,7 +233,7 @@ module Prawn
 
        start_new_page unless options[:skip_page_creation] || options[:template]
 
-       go_to_page(:first) if options[:template]
+       go_to_page(:first, :finish_stream => false) if options[:template]
 
        if block
          block.arity < 1 ? instance_eval(&block) : block[self]
@@ -263,6 +263,7 @@ module Prawn
          end
        end
 
+       close_content_stream
        build_new_page_content
        
        @store.pages.data[:Kids].insert(@page_number, current_page)
@@ -304,11 +305,14 @@ module Prawn
     #
     # See Prawn::Document#number_pages for a sample usage of this capability.
     #
-    def go_to_page(k)
+    def go_to_page(k, options = {})
+      Prawn.verify_options [:finish_stream], options
+      options[:finish_stream]= true if options[:finish_stream].nil?
+
       @page_number = k
       jump_to = @store[@store.object_id_for_page(k)]
       @current_page = jump_to.identifier
-      @page_content = jump_to.data[:Contents].identifier
+      @page_content = new_content_stream(options)
     end
 
     def y=(new_y)
@@ -349,6 +353,7 @@ module Prawn
     #
     def render
       output = StringIO.new
+      close_content_stream
       finalize_all_page_contents
 
       render_header(output)

@@ -405,4 +405,18 @@ describe "PDF file versions" do
   end
 end
 
+describe "The go_to_page() feature" do
+  it "should have three content streams after a single go_to_page call" do
+    @pdf = Prawn::Document.new
+    @pdf.line [100,100], [200,200]
+    @pdf.start_new_page
+    @pdf.go_to_page(:first)
 
+    output = StringIO.new(@pdf.render)
+    hash = PDF::Hash.new(output)
+
+    hash.values.select { |obj|
+      obj.kind_of?(PDF::Reader::Stream)
+    }.size.should == 3
+  end
+end

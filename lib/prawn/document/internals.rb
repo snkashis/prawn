@@ -48,6 +48,32 @@ module Prawn
       def current_page
         @active_stamp_dictionary || @store[@current_page]
       end
+
+      # If there is a page active, create a new content stream and
+      # append it to the page. Also sets the new content stream to
+      # be active, so any new content will go there.
+      #
+      def new_content_stream(options = {})
+        return if current_page.nil?
+
+        unless current_page.data[:Contents].kind_of?(Array)
+          orig_stream = current_page.data[:Contents]
+          current_page.data[:Contents] = [orig_stream]
+        end
+
+        close_content_stream if options[:finish_stream]
+
+        current_page.data[:Contents] << ref!(:Length => 0)
+        current_page.data[:Contents].last << "q\n"
+        current_page.data[:Contents].last.identifier
+      end
+
+      def close_content_stream
+        return if !defined?(@page_content) || @page_content.nil?
+        add_content "Q"
+        page_content.compress_stream if compression_enabled?
+        page_content.data[:Length] = page_content.stream.size
+      end
       
       # Appends a raw string to the current page content.
       #                               
@@ -125,11 +151,7 @@ module Prawn
 
       def finalize_all_page_contents
         (1..page_count).each do |i|
-          go_to_page i
           repeaters.each { |r| r.run(i) }
-          add_content "Q"
-          page_content.compress_stream if compression_enabled?
-          page_content.data[:Length] = page_content.stream.size
         end
       end
 
