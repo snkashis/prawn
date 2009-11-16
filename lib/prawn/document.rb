@@ -226,9 +226,6 @@ module Prawn
                     :top    => options[:top_margin]    || default_margin,
                     :bottom => options[:bottom_margin] || default_margin  }
 
-       generate_margin_box
-
-       @bounding_box = @margin_box
        @page_number = 0
 
        start_new_page unless options[:skip_page_creation] || options[:template]
@@ -265,11 +262,13 @@ module Prawn
 
        close_content_stream
        build_new_page_content
-       
+       generate_margin_box
+
+       @bounding_box = @margin_box
        @store.pages.data[:Kids].insert(@page_number, current_page)
        @store.pages.data[:Count] += 1
        @page_number += 1
-        
+       
        add_content "q"
        
        @y = @bounding_box.absolute_top
@@ -313,6 +312,12 @@ module Prawn
       jump_to = @store[@store.object_id_for_page(k)]
       @current_page = jump_to.identifier
       @page_content = new_content_stream(options)
+
+      generate_margin_box
+
+      @bounding_box = @margin_box
+
+      @y = @bounding_box.absolute_top
     end
 
     def y=(new_y)
@@ -562,7 +567,6 @@ module Prawn
     # See Prawn::Document::Internals for low-level PDF functions
     #
     def build_new_page_content
-      generate_margin_box
       @page_content = ref(:Length => 0)
 
       @current_page = ref(:Type      => :Page,
@@ -574,17 +578,19 @@ module Prawn
       # section 9.1)
       page_resources[:ProcSet] = [:PDF, :Text, :ImageB, :ImageC, :ImageI]
 
+      generate_margin_box
       update_colors
       undash if dashed?
     end
 
     def generate_margin_box
       old_margin_box = @margin_box
+      mediabox = current_page_media_box
       @margin_box = BoundingBox.new(
         self,
-        [ @margins[:left], page_dimensions[-1] - @margins[:top] ] ,
-        :width => page_dimensions[-2] - (@margins[:left] + @margins[:right]),
-        :height => page_dimensions[-1] - (@margins[:top] + @margins[:bottom])
+        [ @margins[:left], mediabox[-1] - @margins[:top] ] ,
+        :width => mediabox[-2] - (@margins[:left] + @margins[:right]),
+        :height => mediabox[-1] - (@margins[:top] + @margins[:bottom])
       )
 
       # we must update bounding box if not flowing from the previous page

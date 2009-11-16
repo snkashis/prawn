@@ -148,6 +148,13 @@ module Prawn
             "Layout must be either :portrait or :landscape"
         end
       end
+
+      private
+
+      def current_page_media_box
+        return if @current_page.nil?
+        @store[@current_page].data[:MediaBox]
+      end
     end
   end
 end
