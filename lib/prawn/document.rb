@@ -231,8 +231,10 @@ module Prawn
        @bounding_box = @margin_box
        @page_number = 0
 
-       start_new_page unless options[:skip_page_creation]
-       
+       start_new_page unless options[:skip_page_creation] || options[:template]
+
+       go_to_page(:first) if options[:template]
+
        if block
          block.arity < 1 ? instance_eval(&block) : block[self]
        end
@@ -304,7 +306,7 @@ module Prawn
     #
     def go_to_page(k)
       @page_number = k
-      jump_to = @store.pages.data[:Kids][k-1]
+      jump_to = @store[@store.object_id_for_page(k)]
       @current_page = jump_to.identifier
       @page_content = jump_to.data[:Contents].identifier
     end

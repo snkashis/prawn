@@ -111,6 +111,20 @@ module Prawn
       end
     end
 
+    # return the object ID that defines the Nth page, where N is a page
+    # number and the first page is 1 (not 0)
+    #
+    def object_id_for_page(k)
+      if k == :last
+        page_obj = pages.data[:Kids].last
+      elsif k == :first
+        page_obj = pages.data[:Kids].first
+      else
+        page_obj = pages.data[:Kids][k-1]
+      end
+      page_obj ? page_obj.identifier : nil
+    end
+
     private
 
     def load_file(filename)
