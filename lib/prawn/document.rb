@@ -73,6 +73,10 @@ module Prawn
       @extensions ||= []
     end
 
+    def self.inherited(base)
+      extensions.each { |e| base.extensions << e }
+    end
+
     # Creates and renders a PDF document.
     #
     # When using the implicit block form, Prawn will evaluate the block
@@ -176,6 +180,7 @@ module Prawn
          @store = ObjectStore.new(:info => options[:info])
        end
        @trailer = {}
+       @before_render_callbacks = []
 
        @page_size     = options[:page_size]   || "LETTER"
        @page_layout   = options[:page_layout] || :portrait

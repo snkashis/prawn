@@ -21,13 +21,8 @@ module Prawn
       #
       # Returns the identifier which points to the reference in the ObjectStore   
       # 
-      # If a block is given, it will be invoked just before the object is written
-      # out to the PDF document stream. This allows you to do deferred processing
-      # on some references (such as fonts, which you might know all the details
-      # about until the last page of the document is finished).
-      #
-      def ref(data, &block)
-        ref!(data, &block).identifier
+      def ref(data)
+        ref!(data).identifier
       end                                               
 
       # Like ref, but returns the actual reference instead of its identifier.
@@ -38,8 +33,8 @@ module Prawn
       # if needed.  If you take this approach, Prawn::Document::Snapshot
       # will probably work with your extension
       #
-      def ref!(data, &block)
-        @store.ref(data, &block)
+      def ref!(data)
+        @store.ref(data)
       end
 
       # Grabs the reference for the current page content
@@ -121,6 +116,12 @@ module Prawn
         @store.root.data[:Names] ||= ref!(:Type => :Names)
       end
 
+      # Defines a block to be called just before the document is rendered.
+      #
+      def before_render(&block)
+        @before_render_callbacks << block
+      end
+
       def go_to_page(k, options = {}) # :nodoc:
         Prawn.verify_options [:finish_stream], options
         options[:finish_stream]= true if options[:finish_stream].nil?
@@ -153,6 +154,8 @@ module Prawn
       # Write out the PDF Header, as per spec 3.4.1
       #
       def render_header(output)
+        @before_render_callbacks.each{ |c| c.call(self) }
+
         # pdf version
         output << "%PDF-#{@version}\n"
 
