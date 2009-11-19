@@ -42,10 +42,6 @@ module Prawn
         @store.ref(data, &block)
       end
 
-      def current_page
-        @store[@current_page]
-      end
-
       # Grabs the reference for the current page content
       #
       def page_content
@@ -95,13 +91,6 @@ module Prawn
         page_content << str << "\n"
       end  
 
-      # Add a new type to the current pages ProcSet 
-      #
-      def proc_set(*types)
-        current_page.data[:ProcSet] ||= ref!([])
-        current_page.data[:ProcSet].data |= types
-      end
-             
       # The Resources dictionary for the current page
       #
       def page_resources
@@ -130,6 +119,20 @@ module Prawn
       #
       def names
         @store.root.data[:Names] ||= ref!(:Type => :Names)
+      end
+
+      def go_to_page(k, options = {}) # :nodoc:
+        Prawn.verify_options [:finish_stream], options
+        options[:finish_stream]= true if options[:finish_stream].nil?
+
+        @current_page = @store.object_id_for_page(k)
+        @page_content = new_content_stream(options)
+
+        generate_margin_box
+
+        @bounding_box = @margin_box
+
+        @y = @bounding_box.absolute_top
       end
 
       private      

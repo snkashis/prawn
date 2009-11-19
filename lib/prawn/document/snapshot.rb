@@ -2,7 +2,7 @@
 
 # snapshot.rb : Implements transactional rendering for Prawn
 #
-# Copyright August 2008, Brad Ediger.  All Rights Reserved.
+# Copyright August 2009, Brad Ediger.  All Rights Reserved.
 #
 # This is free software. Please see the LICENSE and COPYING files for details.
 require 'delegate'
@@ -59,6 +59,7 @@ module Prawn
 
         @current_page = shot[:current_page].identifier
         current_page.replace shot[:current_page]
+        current_page.data[:Contents] = page_content
 
         @store.pages.data[:Kids] = shot[:page_kids].map{|id| @store[id]}
         @store.pages.data[:Count] = shot[:page_kids].size

@@ -482,20 +482,6 @@ module Prawn
       end
     end
 
-    def go_to_page(k, options = {}) # :nodoc:
-      Prawn.verify_options [:finish_stream], options
-      options[:finish_stream]= true if options[:finish_stream].nil?
-
-      @current_page = @store.object_id_for_page(k)
-      @page_content = new_content_stream(options)
-
-      generate_margin_box
-
-      @bounding_box = @margin_box
-
-      @y = @bounding_box.absolute_top
-    end
-
     # Returns true if content streams will be compressed before rendering,
     # false otherwise
     #
@@ -514,6 +500,11 @@ module Prawn
                           :Parent    => @store.pages,
                           :MediaBox  => page_dimensions,
                           :Contents  => page_content)
+
+      # include all proc sets, all the time (recommended by PDF 1.4 Reference 
+      # section 9.1)
+      page_resources[:ProcSet] = [:PDF, :Text, :ImageB, :ImageC, :ImageI]
+
       generate_margin_box
       update_colors
       undash if dashed?
