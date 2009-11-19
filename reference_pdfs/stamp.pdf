@@ -434,22 +434,22 @@ endobj
 5 0 obj
 << /Type /Page
 /Parent 2 0 R
-/ProcSet 9 0 R
 /MediaBox [0 0 612.0 792.0]
+/Contents 4 0 R
+/ProcSet 9 0 R
 /Resources << /XObject << /Stamp2 10 0 R
 /Stamp4 12 0 R
 >>
 >>
-/Contents 4 0 R
 >>
 endobj
 6 0 obj
 << /Type /XObject
 /Subtype /Form
+/BBox [0 0 540.0 720.0]
 /Resources << /Font << /F1.0 8 0 R
 >>
 >>
-/BBox [0 0 540.0 720.0]
 /Length 206
 >>
 stream
@@ -474,9 +474,9 @@ endobj
 [/PDF /Text]
 endobj
 8 0 obj
-<< /BaseFont /Helvetica
-/Type /Font
+<< /Type /Font
 /Subtype /Type1
+/BaseFont /Helvetica
 /Encoding /WinAnsiEncoding
 >>
 endobj
@@ -486,10 +486,10 @@ endobj
 10 0 obj
 << /Type /XObject
 /Subtype /Form
+/BBox [0 0 540.0 720.0]
 /Resources << /Font << /F1.0 8 0 R
 >>
 >>
-/BBox [0 0 540.0 720.0]
 /Length 214
 >>
 stream
@@ -513,10 +513,10 @@ endobj
 11 0 obj
 << /Type /XObject
 /Subtype /Form
+/BBox [0 0 540.0 720.0]
 /Resources << /Font << /F1.0 8 0 R
 >>
 >>
-/BBox [0 0 540.0 720.0]
 /Length 242
 >>
 stream
@@ -582,10 +582,10 @@ endobj
 << /Type /Page
 /Parent 2 0 R
 /MediaBox [0 0 612.0 792.0]
+/Contents 13 0 R
 /Resources << /XObject << /Stamp3 11 0 R
 >>
 >>
-/Contents 13 0 R
 >>
 endobj
 15 0 obj
@@ -607,10 +607,10 @@ endobj
 << /Type /Page
 /Parent 2 0 R
 /MediaBox [0 0 612.0 792.0]
+/Contents 15 0 R
 /Resources << /XObject << /Stamp2 10 0 R
 >>
 >>
-/Contents 15 0 R
 >>
 endobj
 17 0 obj
@@ -632,10 +632,10 @@ endobj
 << /Type /Page
 /Parent 2 0 R
 /MediaBox [0 0 612.0 792.0]
+/Contents 17 0 R
 /Resources << /XObject << /Stamp3 11 0 R
 >>
 >>
-/Contents 17 0 R
 >>
 endobj
 19 0 obj
@@ -657,10 +657,10 @@ endobj
 << /Type /Page
 /Parent 2 0 R
 /MediaBox [0 0 612.0 792.0]
+/Contents 19 0 R
 /Resources << /XObject << /Stamp2 10 0 R
 >>
 >>
-/Contents 19 0 R
 >>
 endobj
 xref

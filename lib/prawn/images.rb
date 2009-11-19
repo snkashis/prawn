@@ -38,8 +38,10 @@ module Prawn
     # proportionally.  When both are provided, the image will be stretched to 
     # fit the dimensions without maintaining the aspect ratio.
     #
+    #
     # If :at is provided, the image will be place in the current page but
     # the text position will not be changed.
+    #
     #
     # If instead of an explicit filename, an object with a read method is
     # passed as +file+, you can embed images from IO objects and things
@@ -55,9 +57,10 @@ module Prawn
     # dimensions of an image object if needed. 
     # (See also: Prawn::Images::PNG , Prawn::Images::JPG)
     # 
-    def image(file, options={})     
-      Prawn.verify_options [:at, :position, :vposition, :height, :width, :scale, :fit], options
-      
+    def image(file, options={})
+      Prawn.verify_options [:at, :position, :vposition, :height, 
+                            :width, :scale, :fit], options
+
       if file.respond_to?(:read)
         image_content = file.read
       else      

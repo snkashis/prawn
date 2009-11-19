@@ -8,12 +8,13 @@ require "rake/gempackagetask"
 
 spec = Gem::Specification.new do |spec|
   spec.name = "prawn"
-  spec.version = "0.6.0.0"
+  spec.version = "0.6.1"
   spec.platform = Gem::Platform::RUBY
   spec.summary = "A fast and nimble PDF generator for Ruby"
-  spec.add_dependency('prawn-core', '>= 0.6.0.0', '< 0.7')
-  spec.add_dependency('prawn-layout', '~> 0.2.0')
-  spec.add_dependency('prawn-format', '~> 0.2.0')
+  spec.add_dependency('prawn-core', '>= 0.6.1', '< 0.7')
+  spec.add_dependency('prawn-layout', '>= 0.3.1', '< 0.4')
+  spec.add_dependency('prawn-format', '>= 0.2.2', '< 0.3')
+  spec.add_dependency('prawn-security', '>= 0.1.1', '< 0.2')
   spec.files = Dir.glob("lib/*")
   spec.require_path = "lib"
   spec.author = "Gregory Brown"
@@ -23,23 +24,24 @@ spec = Gem::Specification.new do |spec|
   spec.description = "Prawn is a fast, tiny, and nimble PDF generator for Ruby"
   spec.post_install_message = %{
   Welcome to Prawn, the best pure-Ruby PDF solution ever!
-  This is version 0.5 RC2
+  This is version 0.6.1
    
-  Please note that you have downloaded a pre-release candidate gem,
-  which has some bugs, ugly spots, other bad things in it.  This gem is also
-  not fully backwards compatible, and may break existing code.
-
-  If you wish to revert until a stable release is ready, uninstall prawn 0.5.0,
-  prawn-core 0.5.0, prawn-layout 0.2.0 and prawn-format 0.2.0
+  For those coming from Prawn 0.5.x or earlier, note that this release has
+  some API breaking changes as well as many new features.  *** You'll want 
+  to know about these changes, as we will no longer be supporting
+  Prawn 0.5 or any earlier version of Prawn***
 
   For details on what has changed, see:
-    http://prawn.majesticseacreature.com/notes/0.5
+    http://wiki.github.com/sandal/prawn/changelog
 
   If you have questions, contact us at:
     http://groups.google.com/group/prawn-ruby
 
-  To submit a patch or report a bug: 
+  To submit a patch or report a bug, select the appropriate package below: 
     http://github.com/sandal/prawn
+    http://github.com/sandal/prawn-layout
+    http://github.com/sandal/prawn-format
+    http://github.com/madriska/prawn-security
 
   Prawn is meant for experienced Ruby hackers, so if you are new to Ruby, you
   might want to wait until you've had some practice with the language before

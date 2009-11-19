@@ -13,7 +13,7 @@ module Prawn
     
     # Provides very low-level support for annotations.  These extensions are
     # mainly for use by prawn-format, so be sure to check that out if all
-    # you need is basic anchors.
+    # you need is basic internal or external links.
     #
     module Annotations
       

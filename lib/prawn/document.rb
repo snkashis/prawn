@@ -10,9 +10,9 @@ require "stringio"
 require "prawn/document/page_geometry"
 require "prawn/document/bounding_box"
 require "prawn/document/column_box"
-require "prawn/document/text"      
 require "prawn/document/internals"
 require "prawn/document/span"
+require "prawn/document/text"
 require "prawn/document/annotations"
 require "prawn/document/destinations"
 require "prawn/document/snapshot"
@@ -53,8 +53,7 @@ module Prawn
   # See the new and generate methods for further details on the above.
   #
   class Document
-    
-    extend  Extendable
+
     include Text
     include PageGeometry
     include Internals
@@ -68,6 +67,11 @@ module Prawn
     attr_accessor :margin_box
     attr_reader   :margins, :page_size, :page_layout, :y
     attr_writer   :font_size
+
+
+    def self.extensions
+      @extensions ||= []
+    end
 
     # Creates and renders a PDF document.
     #
@@ -152,6 +156,8 @@ module Prawn
          :right_margin, :top_margin, :bottom_margin, :skip_page_creation, 
          :compress, :skip_encoding, :text_options, :background, :info,
          :template], options
+
+       self.class.extensions.reverse_each { |e| extend e }
       
        options[:info] ||= {}
        options[:info][:Creator] ||= "Prawn"

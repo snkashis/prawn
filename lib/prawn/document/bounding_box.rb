@@ -14,7 +14,7 @@ module Prawn
     #
     # A bounding box serves two important purposes:
     # * Provide bounds for flowing text, starting at a given point
-    # * Translate the origin (0,0) for graphics primitives.
+    # * Translate the origin (0,0) for graphics primitives
     # 
     # ==Positioning
     # 
@@ -27,17 +27,17 @@ module Prawn
     # * Bounding box 100pt x 100pt in the absolute bottom left of the 
     #   containing box:
     # 
-    #  pdf.bounding_box([0,100], :width => 100, :height => 100)
-    #    stroke_bounds
-    #  end
+    #   pdf.bounding_box([0,100], :width => 100, :height => 100)
+    #     stroke_bounds
+    #   end
     # 
     # * Bounding box 200pt x 400pt high in the center of the page:
     # 
-    #  x_pos = ((bounds.width / 2) - 150)
-    #  y_pos = ((bounds.height / 2) + 200)
-    #  pdf.bounding_box([x_pos, y_pos], :width => 300, :height => 400) do
-    #    stroke_bounds
-    #  end
+    #   x_pos = ((bounds.width / 2) - 150)
+    #   y_pos = ((bounds.height / 2) + 200)
+    #   pdf.bounding_box([x_pos, y_pos], :width => 300, :height => 400) do
+    #     stroke_bounds
+    #   end
     #
     # ==Flowing Text
     #
@@ -189,7 +189,7 @@ module Prawn
 
       return created_box
     end   
- 
+
     # Low level layout helper that simplifies coordinate math.
     #
     # See Prawn::Document#bounding_box for a description of what this class

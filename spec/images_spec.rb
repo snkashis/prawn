@@ -66,6 +66,7 @@ describe "the image() function" do
       @pdf.y.should < @y
     end
   end
+
   describe ":at option" do
     it "should not move text position" do
       @y = @pdf.y
