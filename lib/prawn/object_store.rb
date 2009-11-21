@@ -75,13 +75,7 @@ module Prawn
     alias_method :length, :size
 
     def object_id_for_page(k)
-      if k == :last
-        page_obj = pages.data[:Kids].last
-      elsif k == :first
-        page_obj = pages.data[:Kids].first
-      else
-        page_obj = pages.data[:Kids][k]
-      end
+      page_obj = pages.data[:Kids][k]
       page_obj ? page_obj.identifier : nil
     end
 

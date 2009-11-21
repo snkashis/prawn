@@ -193,7 +193,7 @@ module Prawn
 
        start_new_page unless options[:skip_page_creation] || options[:template]
 
-       go_to_page(:first, :finish_stream => false) if options[:template]
+       go_to_page(0, :finish_stream => false) if options[:template]
 
        if block
          block.arity < 1 ? instance_eval(&block) : block[self]
