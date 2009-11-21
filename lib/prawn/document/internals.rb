@@ -37,6 +37,14 @@ module Prawn
         @store.ref(data)
       end
 
+      # At any stage in the object tree an object can be replaced with an
+      # indirect reference. To get access to the object safely, regardless
+      # of if it's hidden behind a Prawn::Reference, wrap it in unref().
+      #
+      def unref(obj)
+        obj.is_a?(Prawn::Reference) ? obj.data : obj
+      end
+
       # Grabs the reference for the current page content
       #
       def page_content
@@ -89,23 +97,41 @@ module Prawn
       # The Resources dictionary for the current page
       #
       def page_resources
-        current_page.data[:Resources] ||= {}
+        if current_page.data[:Resources]
+          unref(current_page.data[:Resources])
+        else
+          current_page.data[:Resources] = {}
+        end
       end
       
       # The Font dictionary for the current page
       #
       def page_fonts
-        page_resources[:Font] ||= {}
+        if page_resources[:Font]
+          unref(page_resources[:Font])
+        else
+          page_resources[:Font] = {}
+        end
       end
        
       # The XObject dictionary for the current page
       #
       def page_xobjects
-        page_resources[:XObject] ||= {}
+        if page_resources[:XObject]
+          unref(page_resources[:XObject])
+        else
+          page_resources[:XObject] = {}
+        end
       end
 
+      # The External Graphics State dictionary for the current page
+      #
       def page_ext_gstates
-        page_resources[:ExtGState] ||= {}
+        if page_resources[:ExtGState]
+          unref(page_resources[:ExtGState])
+        else
+          page_resources[:ExtGState] = {}
+        end
       end
       
       # The Name dictionary (PDF spec 3.6.3) for this document. It is
