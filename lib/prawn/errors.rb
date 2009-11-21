@@ -64,5 +64,8 @@ module Prawn
     # This error is raised when a requested outline item with a given title does not exist
     UnknownOutlineTitle = Class.new(StandardError) 
     
+    # This error is raised when Prawn fails to load a template file
+    #
+    TemplateError = Class.new(StandardError)
   end
 end   
