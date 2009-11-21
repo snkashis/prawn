@@ -132,6 +132,18 @@ describe "Prawn::ObjectStorie#object_id_for_page" do
     store.object_id_for_page(-1).should == 6
   end
 
+  it "should return the object ID of the first page of a template that uses nested Pages" do
+    filename = "#{Prawn::BASEDIR}/data/pdfs/nested_pages.pdf"
+    store = Prawn::ObjectStore.new(:template => filename)
+    store.object_id_for_page(0).should == 5
+  end
+
+  it "should return the object ID of the last page of a template that uses nested Pages" do
+    filename = "#{Prawn::BASEDIR}/data/pdfs/nested_pages.pdf"
+    store = Prawn::ObjectStore.new(:template => filename)
+    store.object_id_for_page(-1).should == 8
+  end
+
   it "should return nil if given an invalid page number" do
     filename = "#{Prawn::BASEDIR}/data/pdfs/hexagon.pdf"
     store = Prawn::ObjectStore.new(:template => filename)
