@@ -74,12 +74,32 @@ module Prawn
     end
     alias_method :length, :size
 
+    # returns the object ID for a particular page in the document. Pages
+    # are 0 indexed.
+    #
+    #   object_id_for_page(1)
+    #   => 5
+    #   object_id_for_page(10)
+    #   => 87
+    #   object_id_for_page(-11)
+    #   => 17
+    #
     def object_id_for_page(k)
-      page_obj = pages.data[:Kids][k]
-      page_obj ? page_obj.identifier : nil
+      flat_page_ids = get_page_objects(pages).flatten
+      flat_page_ids[k]
     end
 
     private
+
+    # returns a nested array of object IDs for all pages in this object store.
+    #
+    def get_page_objects(obj)
+      if obj.data[:Type] == :Page
+        obj.identifier
+      elsif obj.data[:Type] == :Pages
+        obj.data[:Kids].map { |kid| get_page_objects(kid) }
+      end
+    end
 
     # takes a source PDF and uses it as a template for this document.
     #
