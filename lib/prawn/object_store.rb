@@ -13,7 +13,7 @@ module Prawn
     include Enumerable
     BASE_OBJECTS = %w[info pages root]
 
-    attr_reader :info, :root
+    attr_reader :info, :root, :min_version
 
     def initialize(opts = {})
       @objects = {}
@@ -151,6 +151,7 @@ module Prawn
       hash = PDF::Hash.new(filename)
       src_info = hash.trailer[:Info]
       src_root = hash.trailer[:Root]
+      @min_version = hash.version.to_f
 
       if src_info
         @info = load_object_graph(hash, src_info).identifier
