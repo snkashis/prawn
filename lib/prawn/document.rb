@@ -176,6 +176,7 @@ module Prawn
        @version = 1.3
        if options[:template]
          @store = ObjectStore.new(:template => options[:template])
+         min_version(@store.min_version) if @store.min_version
        else
          @store = ObjectStore.new(:info => options[:info])
        end
