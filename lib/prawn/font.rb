@@ -245,7 +245,7 @@ module Prawn
     end
 
     def identifier_for(subset)
-      "#{@identifier}.#{subset}"
+      "#{@identifier}.#{subset}".to_sym
     end
 
     def inspect
