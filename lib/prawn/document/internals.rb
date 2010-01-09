@@ -39,9 +39,9 @@ module Prawn
 
       # At any stage in the object tree an object can be replaced with an
       # indirect reference. To get access to the object safely, regardless
-      # of if it's hidden behind a Prawn::Reference, wrap it in unref().
+      # of if it's hidden behind a Prawn::Reference, wrap it in deref().
       #
-      def unref(obj)
+      def deref(obj)
         obj.is_a?(Prawn::Reference) ? obj.data : obj
       end
 
@@ -99,7 +99,7 @@ module Prawn
       #
       def page_resources
         if current_page.data[:Resources]
-          unref(current_page.data[:Resources])
+          deref(current_page.data[:Resources])
         else
           current_page.data[:Resources] = {}
         end
@@ -109,7 +109,7 @@ module Prawn
       #
       def page_fonts
         if page_resources[:Font]
-          unref(page_resources[:Font])
+          deref(page_resources[:Font])
         else
           page_resources[:Font] = {}
         end
@@ -119,7 +119,7 @@ module Prawn
       #
       def page_xobjects
         if page_resources[:XObject]
-          unref(page_resources[:XObject])
+          deref(page_resources[:XObject])
         else
           page_resources[:XObject] = {}
         end
@@ -129,7 +129,7 @@ module Prawn
       #
       def page_ext_gstates
         if page_resources[:ExtGState]
-          unref(page_resources[:ExtGState])
+          deref(page_resources[:ExtGState])
         else
           page_resources[:ExtGState] = {}
         end
