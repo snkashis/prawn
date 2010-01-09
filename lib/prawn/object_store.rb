@@ -15,18 +15,18 @@ module Prawn
 
     attr_reader :info, :root
 
-    def initialize(info = {})
+    def initialize(opts = {})
       @objects = {}
       @identifiers = []
 
       # Create required PDF roots
-      if info[:template]
-        load_file(info[:template])
+      if opts[:template]
+        load_file(opts[:template])
       else
-        @info     = ref(info).identifier
+        @info     = ref(opts[:info] || {}).identifier
         pages_obj = ref(:Type => :Pages, :Count => 0, :Kids => [])
         @pages    = pages_obj.identifier
-        @root     = root_ref(pages_obj, info[:outlines]).identifier
+        @root     = root_ref(pages_obj, opts[:outlines]).identifier
       end
     end
 
