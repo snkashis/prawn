@@ -315,6 +315,7 @@ module Prawn
       @page_content = new_content_stream(options)
 
       generate_margin_box
+      update_colors
 
       @bounding_box = @margin_box
 
