@@ -217,7 +217,7 @@ describe "When reopening pages" do
       pdf.text "Page 1"
       pdf.start_new_page
       pdf.text "Page 2"
-      pdf.go_to_page 0
+      pdf.go_to_page 1
       pdf.text "More for page 1"
     end
     
@@ -410,7 +410,7 @@ describe "The go_to_page() feature" do
     @pdf = Prawn::Document.new
     @pdf.line [100,100], [200,200]
     @pdf.start_new_page
-    @pdf.go_to_page(0)
+    @pdf.go_to_page(1)
 
     output = StringIO.new(@pdf.render)
     hash = PDF::Hash.new(output)
@@ -425,7 +425,7 @@ describe "The go_to_page() feature" do
     @pdf.text "James"
     @pdf.start_new_page
     @pdf.text "Anthony"
-    @pdf.go_to_page(0)
+    @pdf.go_to_page(1)
     @pdf.text "Healy"
 
     page_counter = PDF::Inspector::Page.analyze(@pdf.render)
@@ -437,7 +437,7 @@ describe "The go_to_page() feature" do
     @pdf.text "James"
     @pdf.start_new_page
     @pdf.text "Anthony"
-    @pdf.go_to_page(0)
+    @pdf.go_to_page(1)
     @pdf.text "Healy"
 
     text = PDF::Inspector::Text.analyze(@pdf.render)
