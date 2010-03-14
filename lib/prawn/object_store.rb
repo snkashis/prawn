@@ -121,6 +121,8 @@ module Prawn
     #   => 17
     #
     def object_id_for_page(k)
+      return nil if k == 0
+      k -= 1 if k > 0
       flat_page_ids = get_page_objects(pages).flatten
       flat_page_ids[k]
     end

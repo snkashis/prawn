@@ -50,6 +50,20 @@ describe "Document built from a template" do
     text.strings.first.should == "Adding some text"
   end
 
+  it "should allow text to be added to a multiple page template" do
+    filename = "#{Prawn::BASEDIR}/data/pdfs/two_hexagons.pdf"
+
+    @pdf = Prawn::Document.new(:template => filename)
+
+    @pdf.text "Adding some text"
+    @pdf.go_to_page(2)
+    @pdf.text "Adding some more text"
+
+    text = PDF::Inspector::Text.analyze(@pdf.render)
+    text.strings[0].should == "Adding some text"
+    text.strings[1].should == "Adding some more text"
+  end
+
   it "should allow PDFs with page resources behind an indirect object to be used as templates" do
     filename = "#{Prawn::BASEDIR}/data/pdfs/resources_as_indirect_object.pdf"
 

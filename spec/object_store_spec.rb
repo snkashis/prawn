@@ -123,13 +123,19 @@ describe "Prawn::ObjectStorie#object_id_for_page" do
   it "should return the object ID of an imported template page" do
     filename = "#{Prawn::BASEDIR}/data/pdfs/hexagon.pdf"
     store = Prawn::ObjectStore.new(:template => filename)
-    store.object_id_for_page(0).should == 4
+    store.object_id_for_page(1).should == 4
   end
 
   it "should return the object ID of the first imported template page" do
     filename = "#{Prawn::BASEDIR}/data/pdfs/two_hexagons.pdf"
     store = Prawn::ObjectStore.new(:template => filename)
-    store.object_id_for_page(0).should == 4
+    store.object_id_for_page(1).should == 4
+  end
+
+  it "should return the object ID of the second imported template page" do
+    filename = "#{Prawn::BASEDIR}/data/pdfs/two_hexagons.pdf"
+    store = Prawn::ObjectStore.new(:template => filename)
+    store.object_id_for_page(2).should == 6
   end
 
   it "should return the object ID of the last imported template page" do
@@ -141,13 +147,19 @@ describe "Prawn::ObjectStorie#object_id_for_page" do
   it "should return the object ID of the first page of a template that uses nested Pages" do
     filename = "#{Prawn::BASEDIR}/data/pdfs/nested_pages.pdf"
     store = Prawn::ObjectStore.new(:template => filename)
-    store.object_id_for_page(0).should == 5
+    store.object_id_for_page(1).should == 5
   end
 
   it "should return the object ID of the last page of a template that uses nested Pages" do
     filename = "#{Prawn::BASEDIR}/data/pdfs/nested_pages.pdf"
     store = Prawn::ObjectStore.new(:template => filename)
     store.object_id_for_page(-1).should == 8
+  end
+
+  it "should return nil if given an invalid page number" do
+    filename = "#{Prawn::BASEDIR}/data/pdfs/hexagon.pdf"
+    store = Prawn::ObjectStore.new(:template => filename)
+    store.object_id_for_page(0).should == nil
   end
 
   it "should return nil if given an invalid page number" do
