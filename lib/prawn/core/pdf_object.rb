@@ -10,7 +10,10 @@
 #
 module Prawn 
   module Core #:nodoc:
-                                             
+
+    UTF16_BOM = "\xFE\xFF"
+    UTF16_BOM.force_encoding("BINARY") if UTF16_BOM.respond_to?(:force_encoding)
+
     module_function
       
     # Serializes Ruby objects to their PDF equivalents.  Most primitive objects
@@ -45,7 +48,7 @@ module Prawn
       when Prawn::Core::ByteString
         "<" << obj.unpack("H*").first << ">"
       when String
-        obj = "\xFE\xFF" + obj.unpack("U*").pack("n*") unless in_content_stream
+        obj = UTF16_BOM + obj.unpack("U*").pack("n*") unless in_content_stream
         "<" << obj.unpack("H*").first << ">"
        when Symbol                                                         
          if (obj = obj.to_s) =~ /\s/
