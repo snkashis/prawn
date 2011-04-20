@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.rubyforge_project = "prawn"
   spec.add_dependency('pdf-reader', '>=0.9.0')
   spec.add_dependency('ttfunk', '~>1.0.0')
+  spec.add_dependency('chunky_png', '~>1.1.1')
   spec.homepage = "http://prawn.majesticseacreature.com"
   spec.description = <<END_DESC
   Prawn is a fast, tiny, and nimble PDF generator for Ruby
