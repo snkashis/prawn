@@ -18,8 +18,8 @@ module Prawn
     # of a PNG image that we need to embed them in a PDF
     #
     class PNG
+      attr_reader :img_data, :alpha_channel
       attr_reader :width, :height
-      attr_reader :color_type
       attr_accessor :scaled_width, :scaled_height
 
       # Process a new PNG image
@@ -32,6 +32,10 @@ module Prawn
         @height = @chunky.height
         @img_data = extract_image_data
         @alpha_channel = extract_alpha_channel
+      end
+
+      def alpha_channel?
+        @alpha_channel != nil
       end
 
       # Build a PDF object representing this image in +document+, and return
