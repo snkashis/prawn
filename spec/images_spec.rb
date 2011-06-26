@@ -53,11 +53,6 @@ describe "the image() function" do
     lambda { @pdf.image filename, :at => [100,100] }.should.raise(Prawn::Errors::UnsupportedImageType)
   end
 
-  it "should bump PDF version to 1.5 or greater on embedding 16-bit PNGs" do
-    @pdf.image "#{Prawn::BASEDIR}/data/images/16bit.png"
-    @pdf.state.version.should >= 1.5
-  end
-
   # to support Adobe Reader, which apparently doesn't handle 16-bit alpha
   # channels. Verified experimentally [BE] but not confirmed in documentation
   # or anything. OS X Preview handles those files just fine.
