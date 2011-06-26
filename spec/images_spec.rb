@@ -48,11 +48,6 @@ describe "the image() function" do
     lambda { @pdf.image filename, :at => [100,100] }.should.raise(Prawn::Errors::UnsupportedImageType)
   end
 
-  it "should raise an UnsupportedImageType if passed an interlaced PNG" do
-    filename = "#{Prawn::BASEDIR}/data/images/dice_interlaced.png"
-    lambda { @pdf.image filename, :at => [100,100] }.should.raise(Prawn::Errors::UnsupportedImageType)
-  end
-
   # to support Adobe Reader, which apparently doesn't handle 16-bit alpha
   # channels. Verified experimentally [BE] but not confirmed in documentation
   # or anything. OS X Preview handles those files just fine.

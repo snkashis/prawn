@@ -13,6 +13,7 @@ images = [
           ["Type 4", "#{Prawn::BASEDIR}/data/images/page_white_text.png"],
           ["Type 6", "#{Prawn::BASEDIR}/data/images/dice.png"],
           ["Type 6 (16 bit)", "#{Prawn::BASEDIR}/data/images/16bit.png"]
+          ["Type 6 (interlaced)", "#{Prawn::BASEDIR}/data/images/dice_interlaced.png"]
 ]
 
 Prawn::Document.generate("png_types.pdf", :page_size => "A5") do
