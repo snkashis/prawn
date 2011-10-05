@@ -12,7 +12,7 @@ module Prawn
   module Images
 
     # Add the image at filename to the current page. Currently only
-    # JPG and PNG files are supported.
+    # JPG, PNG and PDF files are supported.
     #
     # NOTE: Prawn is very slow at rendering PNGs with alpha channels.  The
     # workaround for those who don't mind installing RMagick is to use:
