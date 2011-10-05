@@ -30,6 +30,7 @@ module Prawn
     # <tt>:width</tt>:: the width of the image [actual width of the image]
     # <tt>:scale</tt>:: scale the dimensions of the image proportionally
     # <tt>:fit</tt>:: scale the dimensions of the image proportionally to fit inside [width,height]
+    # <tt>:page</tt>:: if importing from a multipage file, selects the page to import [1]
     # 
     #   Prawn::Document.generate("image2.pdf", :page_layout => :landscape) do     
     #     pigs = "#{Prawn::BASEDIR}/data/images/pigs.jpg" 
@@ -64,9 +65,9 @@ module Prawn
     # 
     def image(file, options={})
       Prawn.verify_options [:at, :position, :vposition, :height, 
-                            :width, :scale, :fit], options
+                            :width, :scale, :fit, :page], options
 
-      pdf_obj, info = build_image_object(file)
+      pdf_obj, info = build_image_object(file, options)
       embed_image(pdf_obj, info, options)
 
       info
@@ -75,7 +76,7 @@ module Prawn
     # Builds an info object (Prawn::Images::*) and a PDF reference representing
     # the given image. Return a pair: [pdf_obj, info].
     #
-    def build_image_object(file)
+    def build_image_object(file, options)
       if file.respond_to?(:read)
         image_content = file.read
       else
@@ -94,8 +95,9 @@ module Prawn
         klass = case Image.detect_image_format(image_content)
                 when :jpg then Prawn::Images::JPG
                 when :png then Prawn::Images::PNG
+                when :pdf then Prawn::Images::PDF
                 end
-        info = klass.new(image_content)
+        info = klass.new(image_content, options)
 
         # Bump PDF version if the image requires it
         min_version(info.min_pdf_version) if info.respond_to?(:min_pdf_version)
@@ -115,7 +117,7 @@ module Prawn
     #
     def embed_image(pdf_obj, info, options)
       # find where the image will be placed and how big it will be  
-      w,h = info.calc_image_dimensions(options)
+      w, h = info.calc_image_dimensions(options)
 
       if options[:at]     
         x,y = map_to_absolute(options[:at]) 
@@ -131,7 +133,8 @@ module Prawn
 
       # add the image to the current page
       instruct = "\nq\n%.3f 0 0 %.3f %.3f %.3f cm\n/%s Do\nQ"
-      add_content instruct % [ w, h, x, y - h, label ]
+
+      add_content instruct % [ info.width_ratio, info.height_ratio, x, y - h, label ]
     end
     
     private   

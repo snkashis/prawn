@@ -143,9 +143,6 @@ module Prawn
       #
       def import_page(filename, page_num)
         @loaded_objects = {}
-        unless File.file?(filename)
-          raise ArgumentError, "#{filename} does not exist"
-        end
 
         hash = PDF::Reader::ObjectHash.new(filename)
         ref  = hash.page_references[page_num - 1]
