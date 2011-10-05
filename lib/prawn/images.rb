@@ -76,7 +76,7 @@ module Prawn
     # Builds an info object (Prawn::Images::*) and a PDF reference representing
     # the given image. Return a pair: [pdf_obj, info].
     #
-    def build_image_object(file, options)
+    def build_image_object(file, options = {})
       if file.respond_to?(:read)
         image_content = file.read
       else
