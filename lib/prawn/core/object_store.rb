@@ -138,16 +138,13 @@ module Prawn
       # this isn't done the imported objects will just be removed when the
       # store is compacted.
       #
-      # Imports nothing and returns nil if the requested page number doesn't
-      # exist. page_num is 1 indexed, so 1 indicates the first page.
+      # Expects to be passed a PDF::Reader::Page object
       #
-      def import_page(filename, page_num)
+      def import_page(page)
         @loaded_objects = {}
 
-        hash = PDF::Reader::ObjectHash.new(filename)
-        ref  = hash.page_references[page_num - 1]
-
-        ref.nil? ? nil : load_object_graph(hash, ref).identifier
+        page_dict = load_object_graph(page.objects, page.attributes)
+        ref(page_dict).identifier
 
       rescue PDF::Reader::MalformedPDFError, PDF::Reader::InvalidObjectError
         msg = "Error reading template file. If you are sure it's a valid PDF, it may be a bug."

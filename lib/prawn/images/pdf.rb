@@ -35,7 +35,7 @@ module Prawn
       # a Reference to it.
       #
       def build_pdf_object(document)
-        id   = document.state.store.import_page(@data, @page.number)
+        id   = document.state.store.import_page(@page)
         form = document.state.store[id]
 
         form.data[:Type] = :XObject
