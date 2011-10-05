@@ -140,10 +140,13 @@ module Prawn
       #
       # Expects to be passed a PDF::Reader::Page object
       #
-      def import_page(page)
+      def import_page(page, *ignore)
         @loaded_objects = {}
-
-        page_dict = load_object_graph(page.objects, page.attributes)
+        ignore << :Parent
+        attrs = page.attributes.dup.delete_if { |key, value|
+          ignore.include?(key)
+        }
+        page_dict = load_object_graph(page.objects, attrs)
         ref(page_dict).identifier
 
       rescue PDF::Reader::MalformedPDFError, PDF::Reader::InvalidObjectError

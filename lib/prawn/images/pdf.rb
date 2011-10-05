@@ -35,16 +35,13 @@ module Prawn
       # a Reference to it.
       #
       def build_pdf_object(document)
-        id   = document.state.store.import_page(@page)
+        id   = document.state.store.import_page(@page, :Contents, :MediaBox)
         form = document.state.store[id]
 
         form.data[:Type] = :XObject
         form.data[:Subtype] = :Form
-        form.data[:BBox] = form.data[:MediaBox]
+        form.data[:BBox] = @page.attributes[:MediaBox]
         form << @page.raw_content
-        form.data.delete(:Contents)
-        form.data.delete(:Parent)
-        form.data.delete(:MediaBox)
         form.data[:Length] = form.stream.size
         form
       end
