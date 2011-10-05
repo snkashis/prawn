@@ -202,25 +202,28 @@ module Prawn
       # recurse down an object graph from a source PDF, importing all the
       # indirect objects we find.
       #
-      # hash is the PDF::Reader::ObjectHash to extract objects from, object is
+      # ohash is the PDF::Reader::ObjectHash to extract objects from, object is
       # the object to extract.
       #
-      def load_object_graph(hash, object)
+      def load_object_graph(ohash, object)
         @loaded_objects ||= {}
         case object
         when ::Hash then
-          object.each { |key,value| object[key] = load_object_graph(hash, value) }
-          object
+          {}.tap { |hash|
+            object.each do |key, value|
+              hash[key] = load_object_graph(ohash, value)
+            end
+          }
         when Array then
-          object.map { |item| load_object_graph(hash, item)}
+          object.map { |item| load_object_graph(ohash, item)}
         when PDF::Reader::Reference then
           unless @loaded_objects.has_key?(object.id)
             @loaded_objects[object.id] = ref(nil)
-            new_obj = load_object_graph(hash, hash[object])
-          if new_obj.kind_of?(PDF::Reader::Stream)
-            stream_dict = load_object_graph(hash, new_obj.hash)
-            @loaded_objects[object.id].data = stream_dict
-            @loaded_objects[object.id] << new_obj.data
+            new_obj = load_object_graph(ohash, ohash[object])
+            if new_obj.kind_of?(PDF::Reader::Stream)
+              stream_dict = load_object_graph(ohash, new_obj.hash)
+              @loaded_objects[object.id].data = stream_dict
+              @loaded_objects[object.id] << new_obj.data
             else
               @loaded_objects[object.id].data = new_obj
             end
