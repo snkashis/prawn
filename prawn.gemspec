@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Gregory Brown","Brad Ediger","Daniel Nelson","Jonathan Greenberg","James Healy"]
   spec.email = ["gregory.t.brown@gmail.com","brad@bradediger.com","dnelson@bluejade.com","greenberg@entryway.net","jimmy@deefa.com"]
   spec.rubyforge_project = "prawn"
-  spec.add_dependency('pdf-reader', '>=0.12.0.alpha')
+  spec.add_dependency('pdf-reader', '1.0.0.beta1')
   spec.add_dependency('ttfunk', '~>1.0.2')
   spec.homepage = "http://prawn.majesticseacreature.com"
   spec.description = <<END_DESC
