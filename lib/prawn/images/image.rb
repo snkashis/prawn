@@ -11,11 +11,11 @@ module Prawn
   module Images
     class Image
       def height_ratio
-        self.scaled_height / self.height
+        self.scaled_height.to_f / self.height.to_f
       end
 
       def width_ratio
-        self.scaled_width / self.width
+        self.scaled_width.to_f / self.width.to_f
       end
 
       def calc_image_dimensions(options)
