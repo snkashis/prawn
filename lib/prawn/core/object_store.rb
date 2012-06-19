@@ -148,7 +148,6 @@ module Prawn
         }
         page_dict = load_object_graph(page.objects, attrs)
         ref(page_dict).identifier
-
       rescue PDF::Reader::MalformedPDFError, PDF::Reader::InvalidObjectError
         msg = "Error reading template file. If you are sure it's a valid PDF, it may be a bug."
         raise Prawn::Errors::TemplateError, msg

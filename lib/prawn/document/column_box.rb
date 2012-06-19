@@ -53,17 +53,23 @@ module Prawn
         @current_column = 0
       end
 
-      # The column width, not the width of the whole box.  Used to calculate
-      # how long a line of text can be.
+      # The column width, not the width of the whole box,
+      # before left and/or right padding
+      def bare_column_width
+        (@width - @spacer * (@columns - 1)) / @columns
+      end
+
+      # The column width after padding.
+      # Used to calculate how long a line of text can be.
       #
       def width
-        super / @columns - @spacer - @total_left_padding - @total_right_padding
+        bare_column_width - (@total_left_padding + @total_right_padding)
       end
 
       # Column width including the spacer.
       #
       def width_of_column
-        width + @spacer
+        bare_column_width + @spacer
       end
 
       # x coordinate of the left edge of the current column
@@ -72,11 +78,23 @@ module Prawn
         absolute_left + (width_of_column * @current_column)
       end
 
+      # Relative position of the left edge of the current column
+      #
+      def left
+        width_of_column * @current_column
+      end
+
       # x co-orordinate of the right edge of the current column
       #
       def right_side
         columns_from_right = @columns - (1 + @current_column)
         absolute_right - (width_of_column * columns_from_right)
+      end
+
+      # Relative position of the right edge of the current column.
+      #
+      def right
+        left + width
       end
 
       # Moves to the next column or starts a new page if currently positioned at

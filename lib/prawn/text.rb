@@ -152,6 +152,7 @@ module Prawn
     # any text
     #
     def text(string, options={})
+      return false if string.nil?
       # we modify the options. don't change the user's hash
       options = options.dup
 
@@ -176,7 +177,7 @@ module Prawn
     #   text([{ :text => "hello" },
     #         { :text => "world",
     #           :size => 24,
-    #           :style => [:bold, :italic] }])
+    #           :styles => [:bold, :italic] }])
     #
     # == Options
     #
@@ -314,7 +315,7 @@ module Prawn
     #   height_of_formatted([{ :text => "hello" },
     #                        { :text => "world",
     #                          :size => 24,
-    #                          :style => [:bold, :italic] }])
+    #                          :styles => [:bold, :italic] }])
     #
     def height_of_formatted(array, options={})
       if options[:indent_paragraphs]

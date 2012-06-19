@@ -14,8 +14,9 @@ module Prawn
     # Add the image at filename to the current page. Currently only
     # JPG, PNG and PDF files are supported.
     #
-    # NOTE: Prawn is very slow at rendering PNGs with alpha channels.  The
-    # workaround for those who don't mind installing RMagick is to use:
+    # NOTE: Prawn is very slow at rendering PNGs with alpha channels, and this
+    # uses a lot of RAM. The workaround for those who don't mind installing
+    # RMagick is to use:
     #
     # http://github.com/amberbit/prawn-fast-png
     #
@@ -33,10 +34,10 @@ module Prawn
     # <tt>:page</tt>:: if importing from a multipage file, selects the page to import [1]
     # 
     #   Prawn::Document.generate("image2.pdf", :page_layout => :landscape) do     
-    #     pigs = "#{Prawn::BASEDIR}/data/images/pigs.jpg" 
+    #     pigs = "#{Prawn::DATADIR}/images/pigs.jpg" 
     #     image pigs, :at => [50,450], :width => 450                                      
     #
-    #     dice = "#{Prawn::BASEDIR}/data/images/dice.png"
+    #     dice = "#{Prawn::DATADIR}/images/dice.png"
     #     image dice, :at => [50, 450], :scale => 0.75 
     #   end   
     #
@@ -77,6 +78,10 @@ module Prawn
     # the given image. Return a pair: [pdf_obj, info].
     #
     def build_image_object(file, options = {})
+      # Rewind if the object we're passed is an IO, so that multiple embeds of
+      # the same IO object will work
+      file.rewind if file.respond_to?(:rewind)
+
       if file.respond_to?(:read)
         image_content = file.read
       else

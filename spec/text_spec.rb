@@ -66,6 +66,10 @@ describe "#text" do
     # If anything is rendered to the page, it should be whitespace.
     text.strings.each { |str| str.should =~ /\A\s*\z/ }
   end
+  
+  it "should ignore call when string is nil" do
+    @pdf.text(nil).should.be false
+  end
 
   it "should correctly render empty paragraphs" do
     @pdf.text "text\n\ntext"
@@ -259,7 +263,7 @@ describe "#text" do
   
   it "should not raise an exception when providing Pathname instance as font" do
     lambda {
-      @pdf.font Pathname.new("#{Prawn::BASEDIR}/data/fonts/comicsans.ttf")
+      @pdf.font Pathname.new("#{Prawn::DATADIR}/fonts/comicsans.ttf")
     }.should.not.raise(Prawn::Errors::UnknownFont)
   end
 
@@ -274,7 +278,7 @@ describe "#text" do
 
   it "should correctly render a utf-8 string when using a TTF font" do
     str = "©" # copyright symbol
-    @pdf.font "#{Prawn::BASEDIR}/data/fonts/DejaVuSans.ttf"
+    @pdf.font "#{Prawn::DATADIR}/fonts/DejaVuSans.ttf"
     @pdf.text str
 
     # grab the text from the rendered PDF and ensure it matches
@@ -315,9 +319,9 @@ describe "#text" do
         Prawn::Errors::IncompatibleStringEncoding)
     end
     it "should not raise an exception when a shift-jis string is rendered" do
-      datafile = "#{Prawn::BASEDIR}/data/shift_jis_text.txt"
+      datafile = "#{Prawn::DATADIR}/shift_jis_text.txt"
       sjis_str = File.open(datafile, "r:shift_jis") { |f| f.gets }
-      @pdf.font("#{Prawn::BASEDIR}/data/fonts/gkai00mp.ttf")
+      @pdf.font("#{Prawn::DATADIR}/fonts/gkai00mp.ttf")
       lambda { @pdf.text sjis_str }.should.not.raise(
         Prawn::Errors::IncompatibleStringEncoding)
     end
@@ -329,7 +333,7 @@ describe "#text" do
         Prawn::Errors::IncompatibleStringEncoding)
     end
     it "should raise an exception when a shift-jis string is rendered" do
-      sjis_str = File.read("#{Prawn::BASEDIR}/data/shift_jis_text.txt")
+      sjis_str = File.read("#{Prawn::DATADIR}/shift_jis_text.txt")
       lambda { @pdf.text sjis_str }.should.raise(
         Prawn::Errors::IncompatibleStringEncoding)
     end
