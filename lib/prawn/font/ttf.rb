@@ -47,7 +47,7 @@ module Prawn
             end
           end * scale
         else
-          string.unpack("U*").inject(0) do |s,r|
+          string.codepoints.inject(0) do |s,r|
             s + character_width_by_code(r)
           end * scale
         end
@@ -186,7 +186,7 @@ module Prawn
       end
 
       def glyph_present?(char)
-        code = char.unpack("U*").first
+        code = char.codepoints.first
         cmap[code] > 0
       end
 
@@ -214,7 +214,7 @@ module Prawn
       def kern(string)
         a = []
 
-        string.unpack("U*").each do |r|
+        string.codepoints do |r|
           if a.empty?
             a << [r]
           elsif (kern = kern_pairs_table[[cmap[a.last.last], cmap[r]]])
