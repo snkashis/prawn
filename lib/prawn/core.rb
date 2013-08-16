@@ -75,6 +75,8 @@ end
 require "prawn/compatibility"
 require "prawn/errors"
 require "prawn/core/pdf_object"
+require "prawn/core/filters"
+require "prawn/core/filter_list"
 require "prawn/core/stream"
 require "prawn/core/reference"
 require "prawn/core/page"
